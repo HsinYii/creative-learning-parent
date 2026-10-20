@@ -48,9 +48,33 @@ def load_chunks() -> list[dict]:
             chunks.append(current)
     return chunks
 
+_index: tuple[list[dict], np.ndarray] | None = None
+
+
+def get_index() -> tuple[list[dict], np.ndarray]:
+    global _index
+    if _index is None:
+        # TODO: chunks = load_chunks()
+        chunks = load_chunks()
+        # TODO: vecs = embed(...)，用標題 + 內文（2-3 的選擇）
+        vecs = embed([c["title"] + "\n" + c["text"] for c in chunks])
+        # TODO: _index = (chunks, vecs)
+        _index = (chunks, vecs)
+    return _index
+
+def search(query: str, k: int = 3) -> list[dict]:
+    chunks, vecs = get_index()
+    # 問題嵌入，取第一列
+    q = embed([query])[0]
+    # 已正規化，內積就是 cosine 相似度
+    scores = vecs @ q
+    # 分數由高到低，取前 k 個的索引
+    top = np.argsort(-scores)[:k]
+    # 回傳 [{"id", "title", "text", "score"} ...]
+    return [ {**chunks[i], "score": float(scores[i])} for i in top ]
 
 if __name__ == "__main__":
-    chunks = load_chunks()
-    vecs = embed([c["title"] + "\n" + c["text"] for c in chunks])
-    print(vecs.shape)                    # 應該是 (33, 1024)
-    print(np.linalg.norm(vecs, axis=1)[:3])  # 正規化後應該都是 1.0
+    for q in ["小孩發燒要怎麼請假", "段考那天請假怎麼辦", "孩子在學校被欺負"]:
+        print(q)
+        for r in search(q):
+            print(f"  {r['id']} {r['title']} {r['score']:.3f}")
