@@ -1,7 +1,9 @@
 import os
+import re
 from pathlib import Path
 import httpx
 import numpy as np
+from rank_bm25 import BM25Okapi
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "bge-m3")
@@ -65,17 +67,63 @@ def get_index() -> tuple[list[dict], np.ndarray]:
         _index = (chunks, vecs)
     return _index
 
+# 連續的中文字，或連續的英數字（標點、空白會被當成分隔）
+_SEGMENT = re.compile(r"[一-鿿]+|[A-Za-z0-9]+")
+
+
+def tokenize(text: str) -> list[str]:
+    # 中文用字元二元組（bigram）：「請假期間」→ 請假、假期、期間
+    # 不需要詞典，不會像 jieba 把「請假期間」斷成「請／假期／間」
+    tokens = []
+    for seg in _SEGMENT.findall(text):
+        if seg.isascii():
+            tokens.append(seg.lower())
+        elif len(seg) == 1:
+            tokens.append(seg)
+        else:
+            tokens += [seg[i:i + 2] for i in range(len(seg) - 1)]
+    return tokens
+
+_bm25: BM25Okapi | None = None
+
+
+def get_bm25() -> BM25Okapi:
+    global _bm25
+    if _bm25 is None:
+        chunks, _ = get_index()
+        # 每塊用「標題 + 內文」斷詞（和向量版本用同樣的文字，比較公平）
+        tokenized_chunks = [tokenize(c["title"] + "\n" + c["text"]) for c in chunks]
+        _bm25 = BM25Okapi(tokenized_chunks)
+    return _bm25
+
+
 #### 檢索 ####
-def search(query: str, k: int = 3) -> list[dict]:
+RAG_VERSION = os.environ.get("RAG_VERSION", "A")
+
+
+def to_ranks(scores: np.ndarray) -> np.ndarray:
+    """把分數轉成名次：分數最高的是 0，第二高的是 1……"""
+    order = np.argsort(-scores)
+    ranks = np.empty(len(scores), dtype=int)
+    ranks[order] = np.arange(len(scores))
+    return ranks
+
+
+def search(query: str, k: int = 3, version: str = RAG_VERSION) -> list[dict]:
     chunks, vecs = get_index()
-    # 問題embedding，取第一列 (問題也轉成 1024 個數字，形狀 (1024,))
     q = embed([query])[0]
-    # 問題和每個切塊的相似度(已正規化，內積就是 cosine 相似度)
-    scores = vecs @ q
-    # 分數由高到低，取前 k 個的索引
+    dense = vecs @ q                      # 向量分數（版本 A 原本的 scores）
+
+    if version == "B":
+        bm25 = get_bm25().get_scores(tokenize(query))   # 33 個 BM25 分數
+        # BM25 為 0 代表沒有任何詞比對到，名次沒有意義，不給 BM25 的分數
+        bm25_part = np.where(bm25 > 0, 1 / (60 + to_ranks(bm25) + 1), 0.0)
+        scores = 1 / (60 + to_ranks(dense) + 1) + bm25_part
+    else:
+        scores = dense
+
     top = np.argsort(-scores)[:k]
-    # 回傳 [{"id", "title", "text", "score"} ...]
-    return [ {**chunks[i], "score": float(scores[i])} for i in top ]
+    return [{**chunks[i], "score": float(scores[i])} for i in top]
 
 # if __name__ == "__main__":
 #     chunks, vecs = get_index()
@@ -84,8 +132,10 @@ def search(query: str, k: int = 3) -> list[dict]:
 #         print(c["id"], c["title"], repr(c["text"][:40]), v[:4])
 
 if __name__ == "__main__":
-    for q in ["小孩發燒要怎麼請假", "段考那天請假怎麼辦", "孩子在學校被欺負"]:
+    qs = ["小孩發燒要怎麼請假", "段考那天請假怎麼辦", "孩子在學校被欺負", "我孩子昨天說他不想活了"]
+    for q in qs:
         print(q)
-        for r in search(q):
-            print(f"  {r['id']} {r['title']} {r['score']:.3f}")
+        for v in ["A", "B"]:
+            ids = [r["id"] for r in search(q, version=v)]
+            print(f"  {v}: {ids}")
 
