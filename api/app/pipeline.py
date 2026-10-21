@@ -12,6 +12,7 @@ from collections import defaultdict
 import httpx
 
 from .schemas import ChatResponse, Guardrail, Source, TraceStep
+from .retriever import search
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 LOCAL_MODEL = os.environ.get("LOCAL_MODEL", "qwen2.5:3b")
@@ -28,9 +29,10 @@ def check_guardrail(message: str, trace: list[TraceStep]) -> Guardrail:
 
 def retrieve(message: str, trace: list[TraceStep]) -> list[Source]:
     # TODO: 對 /data 中的教材建索引並檢索；校長組改成查詢成績資料
-    trace.append(TraceStep(step="retrieve", detail="尚未實作，無檢索結果"))
-    return []
-
+    results = search(message, k=3)
+    source_details = ", ".join(f"{r['id']}({r['score']:.3f})" for r in results)
+    trace.append(TraceStep(step="retrieve", detail=source_details))
+    return [Source(id=r["id"], text=r["text"]) for r in results]
 
 def generate_local(messages: list[dict]) -> str:
     resp = httpx.post(
@@ -53,7 +55,12 @@ def handle(session_id: str, message: str) -> ChatResponse:
     context = "\n\n".join(f"[{s.id}] {s.text}" for s in sources)
 
     messages = [
-        {"role": "system", "content": f"你是一個助理，請用繁體中文回答。參考資料：\n{context or '（無）'}"},
+        {"role": "system", "content": (
+            "你是星河國中的家長 AI 幫手，請用繁體中文回答家長的問題。"
+            "只根據下方參考資料回答，並在句尾用 [段落id] 標註出處，例如 [P2-1-1]。"
+            "參考資料沒有提到的內容，請回答不知道，並建議家長聯絡導師。\n\n"
+            f"參考資料：\n{context or '（無）'}"
+        )},
         *history,
         {"role": "user", "content": message},
     ]
