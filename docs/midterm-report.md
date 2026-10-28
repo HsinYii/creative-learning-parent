@@ -21,11 +21,11 @@ flowchart LR
     V --> R
     BM --> R
     R --> G["生成：qwen2.5:3b<br/>（Ollama 地端）<br/>prompt 要求標註 [段落id]"]
-    G --> RESP["回覆<br/>answer、sources、trace、route=local"]
-    RESP --> U
-    API -.->|護欄觸發時| LOG[("攔截紀錄<br/>GET /interceptions")]
-    LOG -.-> U
+    G --> RESP["回覆給介面<br/>answer、sources、trace、route=local"]
+    API -.->|護欄觸發時寫入| LOG[("攔截紀錄<br/>GET /interceptions<br/>顯示在介面側邊欄")]
 ```
+
+由左到右是一次 `/chat` 的處理順序；回覆與攔截紀錄都會回到 Streamlit 介面顯示（圖中省略往回的箭頭）。
 
 - **地端路徑**：嵌入（bge-m3）與生成（qwen2.5:3b）都走主機上的 Ollama（容器內以 `host.docker.internal:11434` 連線），目前所有回覆的 `route` 都是 `local`；期中沒有雲端路徑。
 - 程式位置：切塊、嵌入、索引、檢索在 `api/app/retriever.py`；串接與生成在 `api/app/pipeline.py`；攔截紀錄在 `api/app/intercept_log.py`。
