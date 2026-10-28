@@ -2,6 +2,19 @@
 
 規格以[助教 repo](https://github.com/NCU-AIKslab/ncu-1151-creative-learning-final) 為準；規格更新時另行公告。問題請以 issue 提出。
 
+## 本組設定
+
+- 角色：**家長 AI 幫手**
+- 使用的 Ollama 模型（驗收機需預先下載）：
+
+  | 模型 | 用途 | 大小 | 下載 |
+  | --- | --- | --- | --- |
+  | `qwen2.5:3b` | 地端生成（`LOCAL_MODEL`） | 約 1.9 GB | `ollama pull qwen2.5:3b` |
+  | `bge-m3` | 切塊與問題的嵌入（`EMBED_MODEL`） | 約 1.2 GB | `ollama pull bge-m3` |
+
+- 檢索版本：`.env` 的 `RAG_VERSION`，`A` = 向量檢索（預設），`B` = 向量 + BM25 混合檢索（RRF 合併）。
+- 檢索評測：`python eval/run_eval.py`（需要主機 Ollama 有 `bge-m3`），結果輸出到 `docs/results/eval-AB.md`。
+
 ## 範圍
 
 實作重點為後端：檢索管線（RAG）、代理決策（Agent）、地端模型路由、強制性護欄。介面使用 Streamlit 或 Gradio。
@@ -58,6 +71,7 @@
 2. 下載模型：
    ```bash
    ollama pull qwen2.5:3b      # 約 2 GB
+   ollama pull bge-m3          # 約 1.2 GB，本組的嵌入模型，必裝
    ollama pull qwen2.5:1.5b    # 約 1 GB，記憶體 8 GB 以下適用；需同時修改 .env 的 LOCAL_MODEL
    ```
 3. 測試：`ollama run qwen2.5:3b "你好"`
