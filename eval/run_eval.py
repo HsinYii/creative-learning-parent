@@ -71,6 +71,20 @@ def to_markdown(rows: list[dict], k: int) -> str:
         "| MRR | " + " | ".join(f"{stats[v]['mrr']:.3f}" for v in VERSIONS) + " |",
     ]
 
+    # 分題型的命中率
+    types = list(dict.fromkeys(r["type"] for r in rows))
+    lines += [
+        "",
+        f"| 題型 | 題數 | A hit@{k} | B hit@{k} | A hit@1 | B hit@1 |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for t in types:
+        sub = [r for r in rows if r["type"] == t]
+        s = {v: summarize(sub, v) for v in VERSIONS}
+        m = len(sub)
+        lines.append(f"| {t} | {m} | " + " | ".join(
+            f"{round(s[v][key] * m)}/{m}" for key in ("hit", "hit1") for v in VERSIONS) + " |")
+
     # 失敗案例候選：任一版本沒命中，或 A、B 排名不同
     misses = [r for r in rows if not all(r[v]["rank"] for v in VERSIONS)]
     if misses:

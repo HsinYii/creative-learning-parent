@@ -12,7 +12,7 @@ from collections import defaultdict
 import httpx
 
 from .schemas import ChatResponse, Guardrail, Source, TraceStep
-from .retriever import search
+from .retriever import RAG_VERSION, search
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 LOCAL_MODEL = os.environ.get("LOCAL_MODEL", "qwen2.5:3b")
@@ -31,7 +31,8 @@ def retrieve(message: str, trace: list[TraceStep]) -> list[Source]:
     # TODO: 對 /data 中的教材建索引並檢索；校長組改成查詢成績資料
     results = search(message, k=3)
     source_details = ", ".join(f"{r['id']}({r['score']:.3f})" for r in results)
-    trace.append(TraceStep(step="retrieve", detail=source_details))
+    method = "向量" if RAG_VERSION == "A" else "向量 + BM25（RRF）"
+    trace.append(TraceStep(step="retrieve", detail=f"版本 {RAG_VERSION}（{method}）：{source_details}"))
     return [Source(id=r["id"], text=r["text"]) for r in results]
 
 def generate_local(messages: list[dict]) -> str:
