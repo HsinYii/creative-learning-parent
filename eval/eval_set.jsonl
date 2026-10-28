@@ -1,0 +1,16 @@
+{"id": "E01", "type": "literal", "question": "連續請病假三天以上要附什麼？", "expected": ["P2-1-1"]}
+{"id": "E02", "type": "literal", "question": "段考成績什麼時候公告？要去哪裡查？", "expected": ["P3-2-2"]}
+{"id": "E03", "type": "literal", "question": "學期成績裡段考和平時成績各占多少？", "expected": ["P3-2-1"]}
+{"id": "E04", "type": "literal", "question": "社團活動是星期幾上課？", "expected": ["P4-2-1"]}
+{"id": "E05", "type": "literal", "question": "請喪假需要附什麼證明？", "expected": ["P2-1-3"]}
+{"id": "E06", "type": "paraphrase", "question": "我晚上傳訊息給導師，他什麼時候會回？", "expected": ["P1-2-1"]}
+{"id": "E07", "type": "paraphrase", "question": "孩子覺得考卷改錯了，可以請老師重看嗎？", "expected": ["P3-2-3"]}
+{"id": "E08", "type": "paraphrase", "question": "家裡經濟有困難，午餐錢可以少繳嗎？", "expected": ["P4-3-1"]}
+{"id": "E09", "type": "paraphrase", "question": "七年級什麼時候去科博館？早上幾點要到學校？", "expected": ["P4-1-1"]}
+{"id": "E10", "type": "paraphrase", "question": "孩子跟輔導老師講的事，老師會告訴我嗎？", "expected": ["P5-1-2"]}
+{"id": "E11", "type": "paraphrase", "question": "孩子代表學校出去比賽，我要另外幫他請假嗎？", "expected": ["P2-1-4"]}
+{"id": "E12", "type": "paraphrase", "question": "放學路上有陌生人一直跟著孩子，他該怎麼辦？", "expected": ["P5-3-2"]}
+{"id": "E13", "type": "cross", "question": "家庭旅遊剛好碰到段考，回來補考分數怎麼算？", "expected": ["P2-2-1", "P3-1-3"]}
+{"id": "E14", "type": "cross", "question": "孩子八年級，想先了解會考和升學管道要找誰？", "expected": ["P1-2-3"]}
+{"id": "E15", "type": "cross", "question": "數學一直跟不上，學校有沒有免費的補救課程？", "expected": ["P3-3-1"]}
+{"id": "E16", "type": "cross", "question": "要繳學校的費用，有問題應該找哪個處室？", "expected": ["P1-3-1"]}
