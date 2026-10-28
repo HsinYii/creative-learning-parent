@@ -1,7 +1,9 @@
 # 期中報告
 
 - 組別角色：家長 AI 幫手
-- 組員：（姓名、學號、GitHub 帳號）
+- 組員：
+  - 楊心怡、115522087、[HsinYii](https://github.com/HsinYii)
+  - 宋庭萱、115522110、[thsHannah](https://github.com/thsHannah)
 - 繳交 commit：以 `midterm` tag 指向的 commit 為準（`git rev-parse midterm`）
 
 ## 1. 系統架構
