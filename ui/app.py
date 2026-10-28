@@ -9,12 +9,37 @@ import streamlit as st
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
 
-st.set_page_config(page_title="期末專題", layout="wide")
-st.title("期末專題")  # TODO: 改成你們的角色名稱
+CATEGORY_NAMES = {"bullying": "霸凌", "self_harm": "自傷", "campus_safety": "重大校安"}
+
+st.set_page_config(page_title="家長 AI 幫手", layout="wide")
+st.title("家長 AI 幫手")
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
     st.session_state.messages = []
+
+
+def render_interceptions() -> None:
+    """家長組：攔截紀錄列表，內容取自 GET /interceptions。"""
+    st.header("攔截紀錄")
+    st.button("重新整理", key="refresh_interceptions")
+    try:
+        r = httpx.get(f"{API_URL}/interceptions", timeout=10)
+        r.raise_for_status()
+        logs = r.json()
+    except httpx.HTTPError as e:
+        st.warning(f"無法取得攔截紀錄：{e}")
+        return
+    if not logs:
+        st.caption("目前沒有攔截紀錄")
+        return
+    st.caption(f"共 {len(logs)} 筆，新的在前")
+    # 不用 st.dataframe：需要 pyarrow，部分 Windows 電腦會被應用程式控制原則擋下
+    for e in logs:
+        with st.container(border=True):
+            st.markdown(f"**{CATEGORY_NAMES.get(e['category'], e['category'])}** · `{e['action']}`")
+            st.text(e["message"])
+            st.caption(f"{e['time']}　session：{e['session_id']}")
 
 
 def render_backend(resp: dict) -> None:
@@ -72,3 +97,7 @@ if prompt := st.chat_input("輸入訊息…"):
         st.markdown(resp["answer"])
         render_backend(resp)
     st.session_state.messages.append({"role": "assistant", "content": resp["answer"], "resp": resp})
+
+# 放在最後，才會包含剛剛這一輪的攔截
+with st.sidebar:
+    render_interceptions()
