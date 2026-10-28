@@ -18,7 +18,7 @@ flowchart LR
     end
 
     U["Streamlit 介面 :8501"] -->|POST /chat| API["FastAPI :8000"]
-    API --> GR["護欄<br/>期中固定 pass"]
+    API --> GR["護欄<br/>期中 pass"]
     GR --> R["檢索 Top-3<br/>A：向量 cosine<br/>B：向量 + BM25，RRF 合併"]
     V --> R
     BM --> R
