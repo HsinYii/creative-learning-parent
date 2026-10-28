@@ -85,7 +85,7 @@ def main() -> None:
         print(f"| {name} | {hit / n:.2f}（{hit}/{n}） | {hit1 / n:.2f}（{hit1}/{n}） | {mrr:.3f} |")
 
     print("\n關注的題目（Top-3）：")
-    for qid in ("E02", "E04", "E07", "E08"):
+    for qid in ("E02", "E04", "E07", "E08", "E20"):
         print(f"\n{qid}")
         for name in variants:
             print(f"  {name}: {', '.join(tops[name][qid])}")
