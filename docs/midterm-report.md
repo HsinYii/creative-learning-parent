@@ -389,10 +389,10 @@ PASS  parent-034
 | 切塊、嵌入、向量檢索、pipeline 串接 | Claude | 提供步驟與程式骨架，程式由組員撰寫 | 每步執行確認輸出（切塊數 33、向量形狀 (33, 1024)、範例問題命中） |
 | 除錯 | Claude | 找出 `prompt`→`input` 參數錯誤、重複切塊、`DATA_DIR` 未設定 | 修正後重新執行確認 |
 | 版本 B 的 bigram 斷詞與 RRF 修正 | Claude | 撰寫程式並做開發題比較 | 逐行閱讀程式、印出斷詞結果、比較修改前後命中率 |
-| 評測集（`eval/eval_set.jsonl`） | Claude | 依教材草擬 26 題與應命中段落；以程式檢查涵蓋範圍，找出沒被測到的段落再補題 | 逐題對照教材原文確認應命中段落；以程式檢查所有段落 id 都存在於教材、題號不重複；補題時不先看檢索結果 |
-| 評測與實驗腳本（`eval/run_eval.py`、`eval/exp_b_variants.py`） | Claude | 撰寫 A/B 命中率計算與失敗案例驗證實驗 | 先用假的檢索結果測試表格與命中率計算；實驗腳本重算的「B（現行）」命中率（26 題：24/26、hit@1 19/26、MRR 0.827）與 `run_eval.py` 呼叫 `retriever.search()` 的結果一致 |
-| 失敗案例分析（第 5 節） | Claude | 提出假設、印出分數驗證 | 對照印出的向量／BM25 名次與 RRF 分數手算確認 |
-| 攔截紀錄（`api/app/intercept_log.py`、`GET /interceptions`、介面側邊欄） | Claude | 撰寫程式 | 以假的護欄結果測試只有觸發時才寫入紀錄；於瀏覽器與 Docker 中實際操作介面 |
-| README、Docker 驗證 | Claude | 補上模型說明；從零建置計時 | 清空映像與快取後 `docker compose up --build`，40 秒內 `/health` 回傳 200 |
-| K 值比較、分題型命中率、trace 顯示版本 | Claude | 撰寫程式與分析 | K=1/2/3/5 逐一執行並對照各題名次；Docker 中切換 A/B 確認 trace 顯示的版本正確 |
-| 報告文字（第 1～7 節）與架構圖 | Claude | 草擬文字與 Mermaid 圖 | 對照實際程式（`retriever.py`、`pipeline.py`）、評測輸出與測試結果修改；切塊長度重新以程式計算 |
+| 評測集（`eval/eval_set.jsonl`） | Claude Code | 依教材草擬 26 題與應命中段落；以程式檢查涵蓋範圍，找出沒被測到的段落再補題 | 逐題對照教材原文確認應命中段落；以程式檢查所有段落 id 都存在於教材、題號不重複；補題時不先看檢索結果 |
+| 評測與實驗腳本（`eval/run_eval.py`、`eval/exp_b_variants.py`） | Claude Code | 撰寫 A/B 命中率計算與失敗案例驗證實驗 | 先用假的檢索結果測試表格與命中率計算；實驗腳本重算的「B（現行）」命中率（26 題：24/26、hit@1 19/26、MRR 0.827）與 `run_eval.py` 呼叫 `retriever.search()` 的結果一致 |
+| 失敗案例分析（第 5 節） | Claude Code | 提出假設、印出分數驗證 | 對照印出的向量／BM25 名次與 RRF 分數手算確認 |
+| 攔截紀錄（`api/app/intercept_log.py`、`GET /interceptions`、介面側邊欄） | Claude Code | 撰寫程式 | 以假的護欄結果測試只有觸發時才寫入紀錄；於瀏覽器與 Docker 中實際操作介面 |
+| README、Docker 驗證 | Claude Code | 補上模型說明；從零建置計時 | 清空映像與快取後 `docker compose up --build`，40 秒內 `/health` 回傳 200 |
+| K 值比較、分題型命中率、trace 顯示版本 | Claude Code | 撰寫程式與分析 | K=1/2/3/5 逐一執行並對照各題名次；Docker 中切換 A/B 確認 trace 顯示的版本正確 |
+| 報告文字（第 1～7 節）與架構圖 | Claude Code | 草擬文字與 Mermaid 圖 | 對照實際程式（`retriever.py`、`pipeline.py`）、評測輸出與測試結果修改；切塊長度重新以程式計算 |
