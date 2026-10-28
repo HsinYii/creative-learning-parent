@@ -319,5 +319,206 @@
       ],
       "rank": 1
     }
+  },
+  {
+    "id": "E17",
+    "type": "paraphrase",
+    "question": "要怎麼知道孩子每天有什麼回家功課？",
+    "expected": [
+      "P1-1-1"
+    ],
+    "A": {
+      "ids": [
+        "P3-3-2"
+      ],
+      "rank": null
+    },
+    "B": {
+      "ids": [
+        "P1-1-1"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E18",
+    "type": "literal",
+    "question": "孩子這學期請假次數很多，學校會怎麼處理？",
+    "expected": [
+      "P2-2-2"
+    ],
+    "A": {
+      "ids": [
+        "P2-2-2"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P2-2-2"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E19",
+    "type": "literal",
+    "question": "第二次段考是哪幾天？",
+    "expected": [
+      "P3-1-1"
+    ],
+    "A": {
+      "ids": [
+        "P3-1-1"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P3-1-1"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E20",
+    "type": "paraphrase",
+    "question": "孩子不想跟去戶外參觀，那天可以待在家嗎？",
+    "expected": [
+      "P4-1-3"
+    ],
+    "A": {
+      "ids": [
+        "P4-1-3"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P3-3-2"
+      ],
+      "rank": null
+    }
+  },
+  {
+    "id": "E21",
+    "type": "paraphrase",
+    "question": "孩子最近心情很低落，學校有人可以陪他聊聊嗎？",
+    "expected": [
+      "P5-1-1"
+    ],
+    "A": {
+      "ids": [
+        "P3-3-2"
+      ],
+      "rank": null
+    },
+    "B": {
+      "ids": [
+        "P3-3-2"
+      ],
+      "rank": null
+    }
+  },
+  {
+    "id": "E22",
+    "type": "paraphrase",
+    "question": "懷疑孩子在班上被同學欺負，我應該先聯絡誰？",
+    "expected": [
+      "P5-2-1"
+    ],
+    "A": {
+      "ids": [
+        "P5-2-1"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P3-3-2"
+      ],
+      "rank": null
+    }
+  },
+  {
+    "id": "E23",
+    "type": "literal",
+    "question": "學校收到霸凌的反映之後，會怎麼調查？",
+    "expected": [
+      "P5-2-2"
+    ],
+    "A": {
+      "ids": [
+        "P5-2-2"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P5-2-2"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E24",
+    "type": "paraphrase",
+    "question": "有沒有半夜也能打的心理諮詢電話？",
+    "expected": [
+      "P5-3-1"
+    ],
+    "A": {
+      "ids": [
+        "P5-3-1"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P5-3-1"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E25",
+    "type": "paraphrase",
+    "question": "孩子的社團要上台表演，放學後要留下來練，學校會先問過我嗎？",
+    "expected": [
+      "P4-2-2"
+    ],
+    "A": {
+      "ids": [
+        "P4-2-2"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P4-2-2"
+      ],
+      "rank": 1
+    }
+  },
+  {
+    "id": "E26",
+    "type": "cross",
+    "question": "孩子段考那幾天剛好住院，補考的成績會被打折嗎？",
+    "expected": [
+      "P2-2-1",
+      "P3-1-3"
+    ],
+    "A": {
+      "ids": [
+        "P2-2-1"
+      ],
+      "rank": 1
+    },
+    "B": {
+      "ids": [
+        "P2-2-1"
+      ],
+      "rank": 1
+    }
   }
 ]
