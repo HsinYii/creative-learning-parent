@@ -56,7 +56,7 @@ def to_markdown(rows: list[dict], k: int) -> str:
     for i, r in enumerate(rows, 1):
         cells = [str(i), r["question"], r["type"], ", ".join(r["expected"])]
         for v in VERSIONS:
-            cells += [", ".join(r[v]["ids"]), "✅" if r[v]["rank"] else "❌"]
+            cells += [", ".join(r[v]["ids"]), "V" if r[v]["rank"] else "X"]
         lines.append("| " + " | ".join(cells) + " |")
 
     stats = {v: summarize(rows, v) for v in VERSIONS}
@@ -110,7 +110,7 @@ def main() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")
     out.with_suffix(".json").write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
-    sys.stdout.reconfigure(encoding="utf-8")  # Windows 終端機預設 cp950，印不出 ✅
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows 終端機預設 cp950，部分字元印不出來
     print(md)
     print(f"已存檔：{out}、{out.with_suffix('.json')}")
 
